@@ -16,18 +16,14 @@ def print_ranking(my_ranking,ranking_size,top_or_bottom):
 
 def rank(api):
 
-    d=dt.datetime.today().weekday()
-    h=dt.datetime.today().hour()
-    m=dt.datetime.today().minute()
-    if d==0 and h==14 and m==0:
-        interface = DB.nasaDBinterface()
-        ranking_size = random.randint(2,10)
-        top_or_bottom =  random.choice([True, False]) 
-        my_ranking = interface.getranking(ranking_size, top_or_bottom)
-        Tweet=print_ranking(my_ranking,ranking_size,top_or_bottom)
+    interface = DB.nasaDBinterface()
+    ranking_size = random.randint(2,10)
+    top_or_bottom =  random.choice([True, False]) 
+    my_ranking = interface.getranking(ranking_size, top_or_bottom)
+    Tweet=print_ranking(my_ranking,ranking_size,top_or_bottom)
 
-        api.update_status(status=Tweet)
-  
+    api.update_status(status=Tweet)
+
 
 def leer_hashtag(T):
 
@@ -55,10 +51,7 @@ def get_city(TEXT):
         if L[a]=="City:":
             for i in range(len(L)-a-2):
                 c += L[a+i+1] + " "
-                print(c)
-
     x=c.split()
-    print(x)
     for i in range(len(x)-1):
         ciudad += x[i]+" "
     if len(x) != 1:
