@@ -44,7 +44,7 @@ def check_mentions(api, keywords, since_id):
 
                 logger.info(f"Answering to {tweet.user.name}")
 
-                if hashtag=="consulta":
+                if hashtag=="consult":
                     #v es un vector que guarda tanto las emision de CO2 como el puesto en el ranking
                     nombre_ciudad=fc.get_city(TEXT)
                     v=interface.get_consulta(nombre_ciudad)
@@ -59,7 +59,7 @@ def check_mentions(api, keywords, since_id):
 def main(api):
 
     #Interacción con el usuario, consulta
-    hashtags=["#consulta"]
+    hashtags=["#consult"]
     since_id = read_last_seen(FILE_NAME)
     since_id = check_mentions(api, hashtags, since_id)
     logger.info("Waiting...")
