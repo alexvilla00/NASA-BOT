@@ -1,4 +1,4 @@
-from DBinterface import nasaDBinterface  
+import DBinterface as DB
 import random 
 import datetime as dt
 
@@ -20,7 +20,7 @@ def rank(api):
     h=dt.datetime.today().hour()
     m=dt.datetime.today().minute()
     if d==0 and h==14 and m==0:
-        interface = nasaDBinterface()
+        interface = DB.nasaDBinterface()
         ranking_size = random.randint(2,10)
         top_or_bottom =  random.choice([True, False]) 
         my_ranking = interface.getranking(ranking_size, top_or_bottom)
@@ -44,3 +44,24 @@ def leer_hashtag(T):
     for e in ht:
         ht_salida += e
     return ht_salida
+
+def get_city(TEXT):
+    L=TEXT.split()
+    c=""
+    ciudad=""
+    for a in range(len(L)):
+        if L[a]=="#consulta":
+            break
+        if L[a]=="City:":
+            for i in range(len(L)-a-2):
+                c += L[a+i+1] + " "
+                print(c)
+
+    x=c.split()
+    print(x)
+    for i in range(len(x)-1):
+        ciudad += x[i]+" "
+    if len(x) != 1:
+        ciudad += x[len(x)-1]
+
+    return ciudad.lower()

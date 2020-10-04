@@ -3,9 +3,9 @@
 
 import tweepy
 import logging
-from config import create_api
 import time
 import functions as fc
+import DBinterface as DB
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger()
@@ -25,6 +25,7 @@ def store_last_seen(FILE_NAME, last_seen_id):
     return
 
 def check_mentions(api, keywords, since_id):
+    interface = DB.nasaDBinterface()
     logger.info("Retrieving mentions")
     new_since_id = since_id
     for tweet in tweepy.Cursor(api.mentions_timeline,since_id=since_id).items():
@@ -45,7 +46,7 @@ def check_mentions(api, keywords, since_id):
 
                 if hashtag=="consulta":
                     #v es un vector que guarda tanto las emision de CO2 como el puesto en el ranking
-                    v=fc.consulta()
+                    v=interface.get_consulta(fc.get_city(TEXT))
                     api.update_status(status="@" + tweet.user.screen_name + "Your city is in the " + v[1] + 
                     " in the ranking. It emits " + v[0] + "kg of CO2 per habitant.", in_reply_to_status_id=tweet.id )
 
