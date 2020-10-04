@@ -5,7 +5,7 @@ import tweepy
 import logging
 from config import create_api
 import time
-from functions import leer_hashtag
+import functions as fc
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger()
@@ -34,9 +34,9 @@ def check_mentions(api, keywords, since_id):
                 continue
             if any(keyword in tweet.text.lower() for keyword in keywords):
                 TEXT = tweet.text
-               
+                hashtag=""
                 try:
-                    hashtag=leer_hashtag(TEXT)
+                    hashtag=fc.leer_hashtag(TEXT)
                 except Exception:
                     print("hashtag error")
                     hashtag=None
@@ -45,25 +45,19 @@ def check_mentions(api, keywords, since_id):
 
                 if hashtag=="consulta":
                     #v es un vector que guarda tanto las emision de CO2 como el puesto en el ranking
-                    v=consulta()
+                    v=fc.consulta()
                     api.update_status(status="@" + tweet.user.screen_name + "Your city is in the " + v[1] + 
-                    " in the ranking. It emits " +v[0] "kg of CO2 per habitant.", in_reply_to_status_id=tweet.id )
-                    print("mbn")
+                    " in the ranking. It emits " + v[0] + "kg of CO2 per habitant.", in_reply_to_status_id=tweet.id )
 
         except Exception:
             api.update_status(status="@" + tweet.user.screen_name + " This tweet has already been answered.", in_reply_to_status_id=tweet.id )
     return new_since_id
 
-def main():
-    hashtags=["#consulta"]
-    api = create_api()
-    since_id = read_last_seen(FILE_NAME)
-    while True:
-        since_id = check_mentions(api, hashtags, since_id)
-        logger.info("Waiting...")
-        store_last_seen(FILE_NAME, since_id)
-        time.sleep(20)
-    if
+def main(api):
 
-if __name__ == "__main__":
-    main()
+    #Interacción con el usuario, consulta
+    hashtags=["#consulta"]
+    since_id = read_last_seen(FILE_NAME)
+    since_id = check_mentions(api, hashtags, since_id)
+    logger.info("Waiting...")
+    store_last_seen(FILE_NAME, since_id)
