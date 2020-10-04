@@ -34,18 +34,28 @@ def check_mentions(api, keywords, since_id):
                 continue
             if any(keyword in tweet.text.lower() for keyword in keywords):
                 TEXT = tweet.text
-                hashtag=leer_hashtag(TEXT)
-                print(hashtag)
+               
+                try:
+                    hashtag=leer_hashtag(TEXT)
+                except Exception:
+                    print("hashtag error")
+                    hashtag=None
+
                 logger.info(f"Answering to {tweet.user.name}")
-                api.update_status(status="@" + tweet.user.screen_name + " Funciona :(", in_reply_to_status_id=tweet.id )
-            #print (tweet)
-        except Exception as e:
+
+                if hashtag=="consulta":
+                    #v es un vector que guarda tanto las emision de CO2 como el puesto en el ranking
+                    v=consulta()
+                    api.update_status(status="@" + tweet.user.screen_name + "Your city is in the " + v[1] + 
+                    " in the ranking. It emits " +v[0] "kg of CO2 per habitant.", in_reply_to_status_id=tweet.id )
+                    print("mbn")
+
+        except Exception:
             api.update_status(status="@" + tweet.user.screen_name + " This tweet has already been answered.", in_reply_to_status_id=tweet.id )
-            print(e)
     return new_since_id
 
 def main():
-    hashtags=["#mycity", "#ranking"]
+    hashtags=["#consulta"]
     api = create_api()
     since_id = read_last_seen(FILE_NAME)
     while True:
@@ -53,6 +63,7 @@ def main():
         logger.info("Waiting...")
         store_last_seen(FILE_NAME, since_id)
         time.sleep(20)
+    if
 
 if __name__ == "__main__":
     main()
